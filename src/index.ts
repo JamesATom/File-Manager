@@ -1,3 +1,9 @@
-console.log('hello world');
+import { FileManager } from "./Classes/FileManager/fileManager";
 
-// "start": "tsc && node dist/app.js",
+export const curUser = (process.argv[2] == undefined ? 'Anonymous' : process.argv[2].split('=')[1]);
+
+const manager = new FileManager(curUser);
+
+console.log(manager.greeting);
+
+console.log(manager.goodbye);
