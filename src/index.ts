@@ -4,6 +4,11 @@ export const curUser = (process.argv[2] == undefined ? 'Anonymous' : process.arg
 
 const manager = new FileManager(curUser);
 
-console.log(manager.greeting);
+const startAndFinish = () => {
+    console.clear();
+    console.log(manager.greeting);
+    manager.start();
+    // console.log(manager.goodbye);
+}
 
-console.log(manager.goodbye);
+startAndFinish();
