@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Error = void 0;
-var Error;
-(function (Error) {
-    Error["INVALID_INPUT"] = "Invalid input";
-    Error["OPERATION_FAILURE"] = "Operation failed";
-})(Error || (exports.Error = Error = {}));
+exports.ErrorOne = void 0;
+var ErrorOne;
+(function (ErrorOne) {
+    ErrorOne["INVALID_INPUT"] = "Invalid input";
+    ErrorOne["OPERATION_FAILURE"] = "Operation failed";
+})(ErrorOne || (exports.ErrorOne = ErrorOne = {}));

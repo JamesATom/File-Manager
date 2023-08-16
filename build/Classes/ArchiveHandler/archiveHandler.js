@@ -35,56 +35,33 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NavigationHandler = void 0;
-var promises_1 = require("node:fs/promises");
-var path_1 = require("path");
-var os_1 = require("os");
-var NavigationHandler = /** @class */ (function () {
-    function NavigationHandler() {
+exports.ArchiveHandler = void 0;
+var fs_1 = require("fs");
+var zlib_1 = require("zlib");
+var promises_1 = require("stream/promises");
+var ArchiveHandler = /** @class */ (function () {
+    function ArchiveHandler() {
     }
-    NavigationHandler.prototype.up = function () {
-        process.chdir("..");
-    };
-    ;
-    NavigationHandler.prototype.ls = function () {
+    ArchiveHandler.prototype.archive = function (inputFilePath, outputFilePath, shouldDecompress) {
+        if (shouldDecompress === void 0) { shouldDecompress = false; }
         return __awaiter(this, void 0, void 0, function () {
-            var items, files, directories;
+            var inputStream, outputStream, archiveStream;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, (0, promises_1.readdir)(process.cwd(), { withFileTypes: true })];
+                    case 0:
+                        inputStream = (0, fs_1.createReadStream)(inputFilePath);
+                        outputStream = (0, fs_1.createWriteStream)(outputFilePath, { flags: "wx" });
+                        archiveStream = shouldDecompress ? (0, zlib_1.createBrotliDecompress)() : (0, zlib_1.createBrotliCompress)();
+                        return [4 /*yield*/, (0, promises_1.pipeline)(inputStream, archiveStream, outputStream)];
                     case 1:
-                        items = _a.sent();
-                        files = items
-                            .filter(function (item) { return item.isFile(); })
-                            .map(function (file) { return ({ name: file.name, type: "file" }); })
-                            .sort(function (fileA, fileB) { return fileA.name.localeCompare(fileB.name); });
-                        directories = items
-                            .filter(function (item) { return item.isDirectory(); })
-                            .map(function (dir) { return ({ name: dir.name, type: "directory" }); })
-                            .sort(function (dirA, dirB) { return dirA.name.localeCompare(dirB.name); });
-                        console.table(__spreadArray(__spreadArray([], directories, true), files, true));
+                        _a.sent();
                         return [2 /*return*/];
                 }
             });
         });
     };
     ;
-    NavigationHandler.prototype.cd = function (dir) {
-        var supportHomeDir = dir.replace(/^~/, (0, os_1.homedir)());
-        var targetDir = (0, path_1.resolve)(process.cwd(), supportHomeDir);
-        process.chdir(targetDir);
-    };
-    ;
-    return NavigationHandler;
+    return ArchiveHandler;
 }());
-exports.NavigationHandler = NavigationHandler;
+exports.ArchiveHandler = ArchiveHandler;
